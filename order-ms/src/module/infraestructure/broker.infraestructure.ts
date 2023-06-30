@@ -1,6 +1,7 @@
 import { BrokerRepository } from "../domain/repositories/broker.repository";
 import BrokerBootstrap from "../../bootstrap/broker.bootstrap";
 import ReceiveMessageService from "./services/receive-message.service";
+import { Message } from "amqplib";
 
 export class BrokerInfraestructure implements BrokerRepository {
 
@@ -27,7 +28,7 @@ export class BrokerInfraestructure implements BrokerRepository {
     );
   }
 
-  consumerOrderConfirmed(message: any) {
+  consumerOrderConfirmed(message: Message) {
     const messageParse = JSON.parse(message.content.toString()); // recuperando el mensaje
     console.log(messageParse);
     BrokerBootstrap.channel.ack(message); // los mensajes siempre se confirman desde el canal

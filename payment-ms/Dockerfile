@@ -1,4 +1,4 @@
-FROM node:14-alphine
+FROM node:16-alpine
 
 ARG BASE_DIR
 

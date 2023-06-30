@@ -1,5 +1,4 @@
 export interface BrokerRepository {
-    
-    sent(message: unknown): Promise<unknown>
-    receive(): Promise<unknown>
+  sent(message: unknown): Promise<unknown>;
+  receive(): Promise<unknown>;
 }

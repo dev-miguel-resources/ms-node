@@ -1,8 +1,5 @@
-import { Result } from "neverthrow";
 import { Order } from "../order";
-import { IError } from "../../../core/exceptions/error.exception";
-
-export type OrderResult = Result<Order, IError>;
+import { OrderResult } from "../types/orderResult.type";
 
 // Solid Principle: Inversion of Dependency
 // Design Pattern Facade

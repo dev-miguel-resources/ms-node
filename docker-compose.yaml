@@ -16,7 +16,26 @@ services:
     ports:
       - "3500:3500"
     networks:
-      - net-ms-order
+      - net-ms
+    depends_on:
+      - mongo-order
+      - rabbitmq
+
+  payment-ms:
+    container_name: payment-ms
+    image: payment-ms
+    restart: always
+    build:
+      context: .
+      dockerfile: payment-ms/Dockerfile
+      args:
+        - BASE_DIR=payment-ms
+    env_file:
+      - ./payment-ms/.env
+    ports:
+      - "3600:3600"
+    networks:
+      - net-ms
     depends_on:
       - mongo-order
       - rabbitmq
@@ -34,7 +53,22 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: root
       MONGO_INITDB_DATABASE: test
     networks:
-      - net-ms-order
+      - net-ms
+
+  mongo-payment:
+    image: mongo:3.6
+    container_name: mongo-payment
+    restart: always
+    ports:
+      - 27018:27017
+    volumes:
+      - mongo-vol-payment:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: test
+    networks:
+      - net-ms
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -49,13 +83,14 @@ services:
       timeout: 10s
       retries: 5
     networks:
-      - net-ms-order
+      - net-ms
 
 volumes:
   mongo-vol-order:
+  mongo-vol-payment:
 
 
 networks:
-  net-ms-order:
+  net-ms:
 
 
