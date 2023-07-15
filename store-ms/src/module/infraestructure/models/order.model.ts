@@ -1,11 +1,10 @@
-//import { STATUS } from "../../domain/types/status.type";
 import mongoose from "mongoose";
 
-class PaymentModel {
-  private readonly paymentSchema: mongoose.Schema;
+class OrderModel {
+  private readonly orderSchema: mongoose.Schema;
 
   constructor() {
-    this.paymentSchema = new mongoose.Schema({
+    this.orderSchema = new mongoose.Schema({
       transactionId: {
         type: String,
         required: true
@@ -15,6 +14,10 @@ class PaymentModel {
         required: true
       },
       price: {
+        type: Number,
+        required: true
+      },
+      quantity: {
         type: Number,
         required: true
       },
@@ -30,10 +33,6 @@ class PaymentModel {
         type: Date,
         required: false
       },
-      /*status: {
-        type: String,
-        required: true
-      },*/
       active: {
         type: Boolean,
         required: true
@@ -42,8 +41,8 @@ class PaymentModel {
   }
 
   get model() {
-    return mongoose.model("Payment", this.paymentSchema);
+    return mongoose.model("Order", this.orderSchema);
   }
 }
 
-export default new PaymentModel().model;
+export default new OrderModel().model;

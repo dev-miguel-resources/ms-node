@@ -37,7 +37,26 @@ services:
     networks:
       - net-ms
     depends_on:
-      - mongo-order
+      - mongo-payment
+      - rabbitmq
+
+  store-ms:
+    container_name: store-ms
+    image: store-ms
+    restart: always
+    build:
+      context: .
+      dockerfile: store-ms/Dockerfile
+      args:
+        - BASE_DIR=store-ms
+    env_file:
+      - ./store-ms/.env
+    ports:
+      - "3700:3700"
+    networks:
+      - net-ms
+    depends_on:
+      - mongo-store
       - rabbitmq
 
   mongo-order:
@@ -63,6 +82,21 @@ services:
       - 27018:27017
     volumes:
       - mongo-vol-payment:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: test
+    networks:
+      - net-ms
+
+  mongo-store:
+    image: mongo:3.6
+    container_name: mongo-store
+    restart: always
+    ports:
+      - 27019:27017
+    volumes:
+      - mongo-vol-store:/data/db
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root

@@ -1,4 +1,4 @@
-import { err, ok } from "neverthrow";
+import { err } from "neverthrow";
 import { IError } from "../../core/exceptions/error.exception";
 import { Payment } from "../domain/payment";
 import { PaymentRepository } from "../domain/repositories/payment.repository";

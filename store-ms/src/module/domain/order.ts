@@ -1,6 +1,4 @@
-// import { STATUS } from "./types/status.type";
-
-export class Payment {
+export class Order {
   private readonly transactionId: string;
   private readonly productId: string;
   private readonly price: number;
@@ -9,7 +7,6 @@ export class Payment {
   private updatedAt?: Date;
   private deletedAt?: Date;
   private active: boolean;
-  // private status: STATUS;
 
   constructor(transactionId: string, productId: string, price: number, quantity: number) {
     this.transactionId = transactionId;
@@ -18,7 +15,6 @@ export class Payment {
     this.quantity = quantity;
     this.createdAt = new Date();
     this.active = true;
-    // this.status = "PENDING";
   }
 
   properties() {
