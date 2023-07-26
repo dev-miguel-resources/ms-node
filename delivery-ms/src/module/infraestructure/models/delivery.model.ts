@@ -1,11 +1,11 @@
 //import { STATUS } from "../../domain/types/status.type";
 import mongoose from "mongoose";
 
-class PaymentModel {
-  private readonly paymentSchema: mongoose.Schema;
+class DeliveryModel {
+  private readonly deliverySchema: mongoose.Schema;
 
   constructor() {
-    this.paymentSchema = new mongoose.Schema({
+    this.deliverySchema = new mongoose.Schema({
       transactionId: {
         type: String,
         required: true
@@ -46,8 +46,8 @@ class PaymentModel {
   }
 
   get model() {
-    return mongoose.model("Payment", this.paymentSchema);
+    return mongoose.model("Delivery", this.deliverySchema);
   }
 }
 
-export default new PaymentModel().model;
+export default new DeliveryModel().model;

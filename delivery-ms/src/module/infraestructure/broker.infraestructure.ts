@@ -2,20 +2,20 @@ import { BrokerRepository } from "../domain/repositories/broker.repository";
 import BrokerBootstrap from "../../bootstrap/broker.bootstrap";
 import ReceiveMessageService from "./services/receive-message.service";
 import { Message } from "amqplib";
-import Model from './models/store.model';
+import Model from './models/delivery.model';
 import UtilsConfirmBrokerService from "./services/utils-confirm-broker.service";
 
 export class BrokerInfraestructure implements BrokerRepository {
   async sent(message: unknown): Promise<unknown> {
     const channel = BrokerBootstrap.channel;
-    const queueName = process.env.QUEUE_NAME || "store";
+    const queueName = process.env.QUEUE_NAME || "delivery";
     await channel.assertQueue(queueName, { durable: true });
     return channel.sendToQueue(queueName, Buffer.from(JSON.stringify(message)));
   }
 
   async receive(): Promise<void> {
     const channel = BrokerBootstrap.channel;
-    const queueName = process.env.QUEUE_NAME_RECEIVE_PAYMENT || "queue-payment-created";
+    const queueName = process.env.QUEUE_NAME_RECEIVE_STORE || "queue-store-created";
     await ReceiveMessageService.accept(channel, queueName, this.consumerAccept.bind(this));
   }
 

@@ -1,9 +1,9 @@
 import express, { Application } from "express";
-import { StoreInfraestructure } from "./module/infraestructure/store.infraestructure";
-import { StoreApplication } from "./module/application/store.application";
-import Controller from "./module/interface/http/store.controller";
-import storeRouter from "./module/interface/http/router";
-import { StoreRepository } from "./module/domain/repositories/store.repository";
+import { DeliveryInfraestructure } from "./module/infraestructure/delivery.infraestructure";
+import { DeliveryApplication } from "./module/application/delivery.application";
+import Controller from "./module/interface/http/delivery.controller";
+import deliveryRouter from "./module/interface/http/router";
+import { DeliveryRepository } from "./module/domain/repositories/delivery.repository";
 import { BrokerRepository } from "./module/domain/repositories/broker.repository";
 import { BrokerInfraestructure } from "./module/infraestructure/broker.infraestructure";
 
@@ -23,15 +23,15 @@ class App {
 
   mountRoutes() {
 
-    const infraestructure: StoreRepository = new StoreInfraestructure();
+    const infraestructure: DeliveryRepository = new DeliveryInfraestructure();
     const broker: BrokerRepository = new BrokerInfraestructure();
-    const application = new StoreApplication(infraestructure, broker);
+    const application = new DeliveryApplication(infraestructure, broker);
     const controller = new Controller(application);
-    const router = new storeRouter(controller);
+    const router = new deliveryRouter(controller);
 
     // design pattern Chain of Responsability: https://refactoring.guru/es/design-patterns/chain-of-responsibility
     this.expressApp.use("/", (_req, res) => res.send("All is OK"));
-    // this.expressApp.use("/store", router.router);
+    // this.expressApp.use("/delivery", router.router);
   }
 
   get app() {

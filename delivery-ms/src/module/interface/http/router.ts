@@ -1,6 +1,6 @@
 import { validate } from "class-validator";
 import express, { Request, Response, NextFunction } from "express";
-import Controller from "./store.controller";
+import Controller from "./delivery.controller";
 import { InsertValidator } from "../validators/insert.validator";
 
 export default class {

@@ -1,7 +1,7 @@
 import amqp from "amqplib";
 
 export default class ReceiveMessageService {
-  static async storeConfirmedOrRejected(
+  static async deliveryConfirmedOrRejected(
     channel: amqp.Channel,
     cb: (message: unknown) => void,
     exchangeName: string,

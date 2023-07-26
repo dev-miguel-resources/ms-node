@@ -1,10 +1,10 @@
-import { OrderApplication } from "../../application/order.application";
+import { StoreApplication } from "../../application/store.application";
 
 export default class {
-  constructor(private readonly orderApplication: OrderApplication) {}
+  constructor(private readonly storeApplication: StoreApplication) {}
 
   async listen() {
-    await this.orderApplication.receive();
+    await this.storeApplication.receive();
     console.log("Broker listening");
   }
 }

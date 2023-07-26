@@ -59,6 +59,25 @@ services:
       - mongo-store
       - rabbitmq
 
+  delivery-ms:
+    container_name: delivery-ms
+    image: delivery-ms
+    restart: always
+    build:
+      context: .
+      dockerfile: delivery-ms/Dockerfile
+      args:
+        - BASE_DIR=delivery-ms
+    env_file:
+      - ./delivery-ms/.env
+    ports:
+      - "3800:3800"
+    networks:
+      - net-ms
+    depends_on:
+      - mongo-delivery
+      - rabbitmq
+
   mongo-order:
     image: mongo:3.6
     container_name: mongo-order
@@ -104,6 +123,21 @@ services:
     networks:
       - net-ms
 
+  mongo-delivery:
+    image: mongo:3.6
+    container_name: mongo-delivery
+    restart: always
+    ports:
+      - 27020:27017
+    volumes:
+      - mongo-vol-delivery:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: test
+    networks:
+      - net-ms
+  
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: rabbitmq
@@ -122,7 +156,8 @@ services:
 volumes:
   mongo-vol-order:
   mongo-vol-payment:
-
+  mongo-vol-store:
+  mongo-vol-delivery:
 
 networks:
   net-ms:

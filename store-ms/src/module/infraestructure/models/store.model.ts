@@ -1,10 +1,11 @@
+//import { STATUS } from "../../domain/types/status.type";
 import mongoose from "mongoose";
 
-class OrderModel {
-  private readonly orderSchema: mongoose.Schema;
+class StoreModel {
+  private readonly storeSchema: mongoose.Schema;
 
   constructor() {
-    this.orderSchema = new mongoose.Schema({
+    this.storeSchema = new mongoose.Schema({
       transactionId: {
         type: String,
         required: true
@@ -33,6 +34,10 @@ class OrderModel {
         type: Date,
         required: false
       },
+      /*status: {
+        type: String,
+        required: true
+      },*/
       active: {
         type: Boolean,
         required: true
@@ -41,8 +46,8 @@ class OrderModel {
   }
 
   get model() {
-    return mongoose.model("Order", this.orderSchema);
+    return mongoose.model("Store", this.storeSchema);
   }
 }
 
-export default new OrderModel().model;
+export default new StoreModel().model;
