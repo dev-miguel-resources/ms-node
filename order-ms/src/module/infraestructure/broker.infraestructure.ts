@@ -2,9 +2,9 @@ import { BrokerRepository } from "../domain/repositories/broker.repository";
 import BrokerBootstrap from "../../bootstrap/broker.bootstrap";
 import ReceiveMessageService from "./services/receive-message.service";
 import { Message } from "amqplib";
+import Model from "./models/order.model";
 
 export class BrokerInfraestructure implements BrokerRepository {
-
   async sent(message: unknown): Promise<unknown> {
     const channel = BrokerBootstrap.channel;
     const queueName = process.env.QUEUE_NAME || "order";
@@ -28,9 +28,16 @@ export class BrokerInfraestructure implements BrokerRepository {
     );
   }
 
-  consumerOrderConfirmed(message: Message) {
+  // identificar una orden y confirmar de acuerdo a un status de aceptación
+  async consumerOrderConfirmed(message: Message) {
     const messageParse = JSON.parse(message.content.toString()); // recuperando el mensaje
-    console.log(messageParse);
+    const { transactionId } = messageParse;
+    const order = await Model.findOne({ transactionId });
+
+    if (order) {
+      await Model.updateOne({ transactionId }, { status: "APPROVED" });
+    }
+
     BrokerBootstrap.channel.ack(message); // los mensajes siempre se confirman desde el canal
   }
 }

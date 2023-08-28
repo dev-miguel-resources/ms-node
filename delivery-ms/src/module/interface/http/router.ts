@@ -26,7 +26,7 @@ export default class {
   }
 
   mountRoutes() {
-    this.expressRouter.post("/", this.validator(new InsertValidator()), this.controller.insertPayment);
+    this.expressRouter.post("/", this.validator(new InsertValidator()), this.controller.insertDelivery);
   }
 
   get router() {

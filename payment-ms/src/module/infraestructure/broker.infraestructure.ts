@@ -2,7 +2,7 @@ import { BrokerRepository } from "../domain/repositories/broker.repository";
 import BrokerBootstrap from "../../bootstrap/broker.bootstrap";
 import ReceiveMessageService from "./services/receive-message.service";
 import { Message } from "amqplib";
-import Model from './models/payment.model';
+import Model from "./models/payment.model";
 import UtilsConfirmBrokerService from "./services/utils-confirm-broker.service";
 
 export class BrokerInfraestructure implements BrokerRepository {
@@ -17,6 +17,18 @@ export class BrokerInfraestructure implements BrokerRepository {
     const channel = BrokerBootstrap.channel;
     const queueName = process.env.QUEUE_NAME_RECEIVE_ORDER || "queue-order-created";
     await ReceiveMessageService.accept(channel, queueName, this.consumerAccept.bind(this));
+
+    const exchangeName = process.env.EXCHANGE_NAME || "exchange-orders";
+    const exchangeType = process.env.EXCHANGE_TYPE || "fanout";
+    const routingKey = process.env.ROUTING_KEY || "";
+
+    return await ReceiveMessageService.orderConfirmed(
+      channel,
+      this.consumerOrderConfirmed.bind(this),
+      exchangeName,
+      exchangeType,
+      routingKey
+    );
   }
 
   async consumerAccept(message: Message) {
@@ -28,9 +40,16 @@ export class BrokerInfraestructure implements BrokerRepository {
     this.sent(content);
   }
 
-  consumerPaymentConfirmed(message: Message) {
-    const messageParse = JSON.parse(message.content.toString());
-    console.log(messageParse);
-    BrokerBootstrap.channel.ack(message);
+  // identificar una orden y confirmar de acuerdo a un status de aceptación
+  async consumerOrderConfirmed(message: Message) {
+    const messageParse = JSON.parse(message.content.toString()); // recuperando el mensaje
+    const { transactionId } = messageParse;
+    const order = await Model.findOne({ transactionId });
+
+    if (order) {
+      await Model.updateOne({ transactionId }, { status: "APPROVED" });
+    }
+
+    BrokerBootstrap.channel.ack(message); // los mensajes siempre se confirman desde el canal
   }
 }

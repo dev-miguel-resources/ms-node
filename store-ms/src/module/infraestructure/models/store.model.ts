@@ -1,4 +1,3 @@
-//import { STATUS } from "../../domain/types/status.type";
 import mongoose from "mongoose";
 
 class StoreModel {
@@ -34,10 +33,10 @@ class StoreModel {
         type: Date,
         required: false
       },
-      /*status: {
+      status: {
         type: String,
         required: true
-      },*/
+      },
       active: {
         type: Boolean,
         required: true
