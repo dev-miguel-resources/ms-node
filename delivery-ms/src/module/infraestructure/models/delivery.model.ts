@@ -34,10 +34,10 @@ class DeliveryModel {
         type: Date,
         required: false
       },
-      /*status: {
+      status: {
         type: String,
         required: true
-      },*/
+      },
       active: {
         type: Boolean,
         required: true
