@@ -29,7 +29,8 @@ export class BrokerInfraestructure implements BrokerRepository {
     this.sent(content);
   }
 
-  consumerStoreConfirmed(message: Message) {
+  // agregar detalle de finalizado
+  async consumerDeliveryConfirmed(message: Message) {
     const messageParse = JSON.parse(message.content.toString());
     console.log(messageParse);
     BrokerBootstrap.channel.ack(message);
