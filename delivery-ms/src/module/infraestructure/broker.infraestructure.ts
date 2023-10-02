@@ -24,15 +24,22 @@ export class BrokerInfraestructure implements BrokerRepository {
 
   async consumerAccept(message: Message) {
     const content = JSON.parse(message.content.toString());
+    content.status = "APPROVED";
     await Model.create(content);
     UtilsConfirmBrokerService.confirmMessage(BrokerBootstrap.channel, message);
     this.sent(content);
   }
 
-  // agregar detalle de finalizado
   async consumerDeliveryConfirmed(message: Message) {
     const messageParse = JSON.parse(message.content.toString());
-    console.log(messageParse);
+    const { transactionId } = messageParse;
+
+    const order = await Model.findOne({ transactionId });
+
+    if (order) {
+      await Model.updateOne({ transactionId }, { status: "APPROVED" });
+    }
+
     BrokerBootstrap.channel.ack(message);
   }
 }
