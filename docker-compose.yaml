@@ -20,6 +20,24 @@ services:
       - order-ms
       - rabbitmq
 
+  auth-ms:
+    container_name: auth-ms
+    image: auth-ms
+    restart: always
+    build:
+      context: .
+      dockerfile: auth-ms/Dockerfile
+      args:
+        - BASE_DIR=auth-ms
+    env_file:
+      - ./auth-ms/.env
+    ports:
+      - "4000:4000"
+    networks:
+      - net-ms
+    depends_on:
+     - mongo-auth
+
   order-ms:
     container_name: order-ms
     image: order-ms
@@ -155,6 +173,21 @@ services:
       MONGO_INITDB_DATABASE: test
     networks:
       - net-ms
+
+  mongo-auth:
+    image: mongo:3.6
+    container_name: mongo-auth
+    restart: always
+    ports:
+      - 27021:27017
+    volumes:
+      - mongo-vol-auth:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: test
+    networks:
+      - net-ms
   
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -176,6 +209,7 @@ volumes:
   mongo-vol-payment:
   mongo-vol-store:
   mongo-vol-delivery:
+  mongo-vol-auth:
 
 networks:
   net-ms:

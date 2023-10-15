@@ -1,5 +1,5 @@
 import { Result } from "neverthrow";
-import { Order } from "../order";
+import { Auth } from "../auth";
 import { IError } from "../../../core/exceptions/error.exception";
 
-export type OrderResult = Result<Order, IError>;
+export type AuthResult = Result<Auth, IError>;

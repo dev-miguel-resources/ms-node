@@ -22,16 +22,33 @@ export default class AuthAppService {
   }
 
   static validateAccessToken(token: string) {
-    // pendiente
+    return new Promise((resolve, reject) => {
+      try {
+        const payload = jwt.decode(token, process.env.JWT_SECRET || "secret");
+        console.log(payload);
+        resolve(payload);
+      } catch (error) {
+        console.error(error);
+        if (error.message === "Token expired") {
+          reject({
+            status: 409,
+            message: "The token has expired"
+          });
+        } else {
+          reject({
+            status: 401,
+            message: "Invalid token"
+          });
+        }
+      }
+    });
   }
 
   static async cipherPassword(password: string): Promise<string> {
-    return "";
-    // pendiente
+    return await bcrypt.hash(password, 10);
   }
 
   static async isMatchPassword(password: string, passwordHash: string): Promise<boolean> {
-    return false;
-    // pendiente
+    return await bcrypt.compare(password, passwordHash);
   }
 }

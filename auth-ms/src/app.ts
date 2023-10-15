@@ -1,11 +1,9 @@
 import express, { Application } from "express";
-import { OrderInfraestructure } from "./module/infraestructure/order.infraestructure";
-import { OrderApplication } from "./module/application/order.application";
-import Controller from "./module/interface/http/order.controller";
-import OrderRouter from "./module/interface/http/router";
-import { OrderRepository } from "./module/domain/repositories/order.repository";
-import { BrokerRepository } from "./module/domain/repositories/broker.repository";
-import { BrokerInfraestructure } from "./module/infraestructure/broker.infraestructure";
+
+import { AuthApplication } from "./module/application/auth.application";
+import { AuthInfraestructure } from "./module/infraestructure/auth.infraestructure";
+import Controller from "./module/interface/http/auth.controller";
+import AuthRouter from "./module/interface/http/router";
 
 class App {
   private readonly expressApp: Application;
@@ -21,16 +19,15 @@ class App {
     this.expressApp.use(express.urlencoded({ extended: true }));
   }
 
+  // Route parents
   mountRoutes() {
-
-    const infraestructure: OrderRepository = new OrderInfraestructure();
-    const broker: BrokerRepository = new BrokerInfraestructure();
-    const application = new OrderApplication(infraestructure, broker); // pendiente de agregar el broker
+    const repository = new AuthInfraestructure();
+    const application = new AuthApplication(repository);
     const controller = new Controller(application);
-    const router = new OrderRouter(controller);
+    const router = new AuthRouter(controller);
 
     // design pattern Chain of Responsability: https://refactoring.guru/es/design-patterns/chain-of-responsibility
-    this.expressApp.use("/order", router.router);
+    this.expressApp.use("/auth", router.router);
     this.expressApp.use("/", (_req, res) => res.send("All is OK"));
   }
 

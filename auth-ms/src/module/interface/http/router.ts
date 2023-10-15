@@ -1,8 +1,8 @@
 import { validate } from "class-validator";
 import express, { Request, Response, NextFunction } from "express";
-import Controller from "./order.controller";
-import { InsertValidator } from "../validators/insert.validator";
-import { BadRequestErrorException } from "../../../core/exceptions/badRequest.exception";
+import Controller from "./auth.controller";
+import { RegisterValidator } from "../validators/register.validator";
+//import { BadRequestErrorException } from "../../../core/exceptions/badRequest.exception";
 
 export default class {
   private readonly expressRouter: express.Router;
@@ -12,7 +12,7 @@ export default class {
     this.mountRoutes();
   }
 
-  validator(instance: InsertValidator) {
+  validator(instance: RegisterValidator) {
     return (req: Request, res: Response, next: NextFunction) => {
       const body = req.body;
       Object.assign(instance, body);
@@ -32,7 +32,7 @@ export default class {
   }
 
   mountRoutes() {
-    this.expressRouter.post("/", this.validator(new InsertValidator()), this.controller.insertOrder);
+    this.expressRouter.post("/register", this.validator(new RegisterValidator()), this.controller.register);
   }
 
   get router() {
