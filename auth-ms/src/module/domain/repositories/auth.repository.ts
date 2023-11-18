@@ -6,5 +6,6 @@ import { AuthResult } from "../types/auth.type";
 export interface AuthRepository {
   
   register(auth: Auth): Promise<AuthResult>;
-  // pendiente los demás
+  findOne(where: { [s: string]: string }): Promise<any> // pending
+  update(where: { [s: string]: string }, data: { [s: string]: string }): Promise<any>
 }

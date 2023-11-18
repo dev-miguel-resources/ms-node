@@ -7,6 +7,7 @@ import { AuthRepository } from "../domain/repositories/auth.repository";
 import { AuthResult } from "../domain/types/auth.type";
 
 export class AuthInfraestructure implements AuthRepository {
+ 
   async register(auth: Auth): Promise<AuthResult> {
     try {
       await Model.create(auth);
@@ -16,5 +17,16 @@ export class AuthInfraestructure implements AuthRepository {
       resultErr.status = 500;
       return err(resultErr);
     }
+  }
+
+  async findOne(where: { [s: string]: string; }): Promise<any> {
+    return await Model.findOne(where);
+  }
+
+  async update(
+    where: {[s: string]: string },
+    data: { [s: string]: string }
+  ): Promise<any> {
+    return await Model.updateOne(where, data)
   }
 }
