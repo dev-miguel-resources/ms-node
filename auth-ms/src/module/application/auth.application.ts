@@ -40,6 +40,22 @@ export class AuthApplication {
   }
 
   async validateAccessToken(token: string) {
-    return AuthAppService.validateAccessToken(token)
+    return AuthAppService.validateAccessToken(token);
+  }
+
+  async getNewAccessToken(refreshToken: string) {
+    const auth = await this.repositoryAuth.findOne({ refreshToken });
+    if (auth) {
+      const newAccessToken = AuthAppService.generateAccessToken(auth.id, auth.name);
+
+      const newRefreshToken = AuthAppService.generateRefreshToken();
+
+      // update
+      await this.repositoryAuth.update({ refreshToken }, { refreshToken: newRefreshToken });
+
+      return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+    } else {
+      return null;
+    }
   }
 }

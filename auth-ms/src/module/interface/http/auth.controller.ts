@@ -8,6 +8,7 @@ export default class {
     this.register = this.register.bind(this);
     this.login = this.login.bind(this);
     this.validateAccessToken = this.validateAccessToken.bind(this);
+    this.getNewAccessToken = this.getNewAccessToken.bind(this);
   }
 
   async register(req: Request, res: Response) {
@@ -34,6 +35,18 @@ export default class {
       res.json(payload);
     } catch (error) {
       res.status(error.status).json(error.message);
+    }
+  }
+
+  async getNewAccessToken(req: Request, res: Response) {
+    const { refreshToken } = req.body;
+
+    const tokens: ITokens | null = await this.app.getNewAccessToken(refreshToken);
+
+    if (tokens) {
+      res.json(tokens);
+    } else {
+      res.status(401).json("Unhatorized");
     }
   }
 }

@@ -4,6 +4,7 @@ import Controller from "./auth.controller";
 import { RegisterValidator } from "../validators/register.validator";
 import { LoginValidator } from "../validators/login.validator";
 import { TokenValidator } from "../validators/token.validator";
+import { RefreshTokenValidator } from "../validators/refresh-token.validator";
 //import { BadRequestErrorException } from "../../../core/exceptions/badRequest.exception";
 
 export default class {
@@ -36,7 +37,8 @@ export default class {
   mountRoutes() {
     this.expressRouter.post("/register", this.validator(new RegisterValidator()), this.controller.register);
     this.expressRouter.post("/login", this.validator(new LoginValidator()), this.controller.login);
-    this.expressRouter.post("/validate-access-token", this.validator(new TokenValidator()), this.controller.validateAccessToken)
+    this.expressRouter.post("/validate-access-token", this.validator(new TokenValidator()), this.controller.validateAccessToken);
+    this.expressRouter.post("/get-new-access-token", this.validator(new RefreshTokenValidator()), this.controller.getNewAccessToken);
   }
 
   get router() {

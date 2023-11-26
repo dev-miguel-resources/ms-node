@@ -31,8 +31,6 @@ services:
         - BASE_DIR=auth-ms
     env_file:
       - ./auth-ms/.env
-    ports:
-      - "4000:4000"
     networks:
       - net-ms
     depends_on:
@@ -49,8 +47,6 @@ services:
         - BASE_DIR=order-ms
     env_file:
       - ./order-ms/.env
-    ports:
-      - "3500:3500"
     networks:
       - net-ms
     depends_on:
@@ -68,8 +64,6 @@ services:
         - BASE_DIR=payment-ms
     env_file:
       - ./payment-ms/.env
-    ports:
-      - "3600:3600"
     networks:
       - net-ms
     depends_on:
@@ -87,8 +81,6 @@ services:
         - BASE_DIR=store-ms
     env_file:
       - ./store-ms/.env
-    ports:
-      - "3700:3700"
     networks:
       - net-ms
     depends_on:
@@ -106,8 +98,6 @@ services:
         - BASE_DIR=delivery-ms
     env_file:
       - ./delivery-ms/.env
-    ports:
-      - "3800:3800"
     networks:
       - net-ms
     depends_on:

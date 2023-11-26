@@ -3,7 +3,7 @@ import express, { Request, Response, Application } from "express";
 import AppService from "./services/app.service";
 import { Routes } from "./interfaces/route.type";
 import { Route } from "./interfaces/routeProps.interface";
-// middlewares pendientes
+import { authentication } from "./middlewares/authentication";
 
 class App {
   readonly expressApp: any; // pendiente del tipo correcto
@@ -13,12 +13,30 @@ class App {
       origin: "/api/order",
       target: `${AppService.PATH_ORDER}/order`,
       method: "POST",
+      middlewares: [authentication]
+    },
+    {
+      origin: "/api/auth/register",
+      target: `${AppService.PATH_AUTH}/auth/register`,
+      method: "POST",
+      middlewares: []
+    },
+    {
+      origin: "/api/auth/login",
+      target: `${AppService.PATH_AUTH}/auth/login`,
+      method: "POST",
+      middlewares: []
+    },
+    {
+      origin: "/api/auth/get-new-access-token",
+      target: `${AppService.PATH_AUTH}/auth/get-new-access-token`,
+      method: "POST",
       middlewares: []
     }
   ];
 
   constructor() {
-    this.expressApp = express()
+    this.expressApp = express();
     this.mountMiddlewares();
     this.mountRoutes();
   }
