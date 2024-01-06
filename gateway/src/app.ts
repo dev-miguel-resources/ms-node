@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import express, { Request, Response, Application } from "express";
+import express, { Request, Response } from "express";
 import AppService from "./services/app.service";
 import { Routes } from "./interfaces/route.type";
 import { Route } from "./interfaces/routeProps.interface";

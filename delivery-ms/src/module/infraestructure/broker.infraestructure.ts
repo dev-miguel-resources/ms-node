@@ -16,6 +16,22 @@ export class BrokerInfraestructure implements BrokerRepository {
     channel.publish(exchangeName, routingKey, Buffer.from(JSON.stringify(message)));
   }
 
+  async sentError(message: unknown): Promise<any> {
+    const channel = BrokerBootstrap.channel;
+    const exchangeName = process.env.EXCHANGE_NAME_REJECT || "exchange-reject";
+    const exchangeType = process.env.EXCHANGE_TYPE_REJECT || "topic";
+    const routingKey = process.env.ROUTING_KEY_REJECT || "delivery.error";
+
+    console.log("Sent error: ", message);
+
+    await channel.assertExchange(exchangeName, exchangeType, { durable: true });
+    channel.publish(
+      exchangeName,
+      routingKey,
+      Buffer.from(JSON.stringify(message))
+    )
+  }
+
   async receive(): Promise<void> {
     const channel = BrokerBootstrap.channel;
     const queueName = process.env.QUEUE_NAME_RECEIVE_STORE || "queue-store-created";
