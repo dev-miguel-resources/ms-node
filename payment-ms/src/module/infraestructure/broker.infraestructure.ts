@@ -36,6 +36,10 @@ export class BrokerInfraestructure implements BrokerRepository {
 
     const exchangeNameReject = process.env.EXCHANGE_NAME_REJECT || "exchange-reject";
     const exchangeTypeReject = process.env.EXCHANGE_TYPE_REJECT || "topic";
+    /*const routingKeyReject = process.env.ROUTING_KEY_REJECT.split(",") || [
+      "delivery.error",
+      "store.error",
+    ];*/
     const routingKeyReject = process.env.ROUTING_KEY_REJECT.split(",") || [
       "delivery.error",
       "store.error",
@@ -51,7 +55,7 @@ export class BrokerInfraestructure implements BrokerRepository {
       routingKeyReject
     )
 
-    const exchangeName = process.env.EXCHANGE_NAME || "exchange-orders";
+    const exchangeName = process.env.EXCHANGE_NAME || "exchange-order";
     const exchangeType = process.env.EXCHANGE_TYPE || "fanout";
     const routingKey = process.env.ROUTING_KEY || "";
 
@@ -73,7 +77,7 @@ export class BrokerInfraestructure implements BrokerRepository {
     this.sent(content);
   }
 
-  async consumerReject(message: any) { // revisar any
+  async consumerReject(message: Message) {
     const content = JSON.parse(message.content.toString());
     await Model.updateOne(
       { transactionId: content.transactionId },

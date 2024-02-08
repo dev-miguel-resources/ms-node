@@ -23,4 +23,5 @@ export default class ReceiveMessageService {
     await channel.assertQueue(queue_name, { durable: true });
     channel.consume(queue_name, message => cb(message), { noAck: false });
   }
+
 }

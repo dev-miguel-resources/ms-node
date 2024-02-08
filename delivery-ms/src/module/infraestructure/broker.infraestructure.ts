@@ -8,7 +8,7 @@ import UtilsConfirmBrokerService from "./services/utils-confirm-broker.service";
 export class BrokerInfraestructure implements BrokerRepository {
   async sent(message: unknown): Promise<void> {
     const channel = BrokerBootstrap.channel;
-    const exchangeName = process.env.EXCHANGE_NAME || "exchange-orders";
+    const exchangeName = process.env.EXCHANGE_NAME || "exchange-order";
     const exchangeType = process.env.EXCHANGE_TYPE || "fanout";
     const routingKey = process.env.ROUTING_KEY || "";
 
@@ -32,22 +32,24 @@ export class BrokerInfraestructure implements BrokerRepository {
     )
   }
 
-  async receive(): Promise<void> {
+  async receive(): Promise<any> {
     const channel = BrokerBootstrap.channel;
-    const queueName = process.env.QUEUE_NAME_RECEIVE_STORE || "queue-store-created";
+    const queueName = process.env.QUEUE_NAME_RECEIVE_ORDER || "queue-order-created";
     await ReceiveMessageService.accept(channel, queueName, this.consumerAccept.bind(this));
   }
 
-  async consumerAccept(message: Message) {
+  async consumerAccept(message: any) {
     const content = JSON.parse(message.content.toString());
     content.status = "APPROVED";
     await Model.create(content);
     UtilsConfirmBrokerService.confirmMessage(BrokerBootstrap.channel, message);
-    this.sent(content);
+    //this.sent(content);
+    this.sentError(content); // para forzar el error
   }
 
-  async consumerDeliveryConfirmed(message: Message) {
+  async consumerOrderConfirmed(message: Message) {
     const messageParse = JSON.parse(message.content.toString());
+    console.log("Delivery confirmed: ", messageParse);
     const { transactionId } = messageParse;
 
     const order = await Model.findOne({ transactionId });
@@ -55,6 +57,8 @@ export class BrokerInfraestructure implements BrokerRepository {
     if (order) {
       await Model.updateOne({ transactionId }, { status: "APPROVED" });
     }
+
+    console.log("Order confirmed: ", transactionId);
 
     BrokerBootstrap.channel.ack(message);
   }
